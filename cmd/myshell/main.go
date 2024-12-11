@@ -17,8 +17,14 @@ func main() {
 	cmd = strings.TrimSpace(cmd)
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "no command provided")
+		fmt.Fprintln(os.Stderr, "Error reading command: ", err)
+		return
 	}
 
-	fmt.Fprintf(os.Stdout, "%s: command not found", cmd)
+	if cmd == "" {
+		fmt.Fprintln(os.Stderr, "no command provided")
+		return
+	}
+
+	fmt.Fprintf(os.Stdout, "%s: command not found\n", cmd)
 }
