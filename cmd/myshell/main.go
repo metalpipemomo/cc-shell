@@ -8,23 +8,24 @@ import (
 )
 
 func main() {
-	// Uncomment this block to pass the first stage
-	fmt.Fprint(os.Stdout, "$ ")
 
-	// Wait for user input
-	cmd, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	for {
+		fmt.Fprint(os.Stdout, "$ ")
 
-	cmd = strings.TrimSpace(cmd)
+		cmd, err := bufio.NewReader(os.Stdin).ReadString('\n')
 
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading command: ", err)
-		return
+		cmd = strings.TrimSpace(cmd)
+
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error reading command: ", err)
+			return
+		}
+
+		if cmd == "" {
+			fmt.Fprintln(os.Stdout, "")
+		} else {
+			fmt.Fprintf(os.Stdout, "%s: command not found\n", cmd)
+		}
+
 	}
-
-	if cmd == "" {
-		fmt.Fprintln(os.Stderr, "no command provided")
-		return
-	}
-
-	fmt.Fprintf(os.Stdout, "%s: command not found\n", cmd)
 }
