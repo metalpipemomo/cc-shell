@@ -17,5 +17,5 @@ func main() {
 		fmt.Fprintln(os.Stderr, "no command provided")
 	}
 
-	fmt.Fprintf(os.Stdout, "%s: command not found\n", cmd)
+	fmt.Fprintf(os.Stdout, "%s: command not found", cmd)
 }
