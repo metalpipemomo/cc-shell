@@ -4,11 +4,24 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 )
+
+func searchPaths(cmd string) (string, bool) {
+	paths := strings.Split(os.Getenv("PATH"), ":")
+	for _, path := range paths {
+		joinedPath := filepath.Join(path, cmd)
+		if _, err := os.Stat(joinedPath); err == nil {
+			return joinedPath, true
+		}
+	}
+
+	return "", false
+}
 
 func main() {
 
@@ -58,19 +71,11 @@ func main() {
 					} else {
 						_, ok := cmds[match[1]]
 						if !ok {
-							paths := strings.Split(os.Getenv("PATH"), ":")
-							foundInPath := false
-							for _, path := range paths {
-								joinedPath := filepath.Join(path, match[1])
-								if _, err := os.Stat(joinedPath); err == nil {
-									fmt.Fprintf(os.Stdout, "%s is %s\n", match[1], joinedPath)
-									foundInPath = true
-									break
-								}
-							}
-
+							joinedPath, foundInPath := searchPaths(match[1])
 							if !foundInPath {
 								fmt.Fprintf(os.Stderr, "%s: not found\n", match[1])
+							} else {
+								fmt.Fprintf(os.Stdout, "%s is %s\n", match[1], joinedPath)
 							}
 						} else {
 							fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", match[1])
@@ -78,6 +83,18 @@ func main() {
 					}
 				}
 			}
+		}
+
+		args := strings.Split(cmd, " ")
+		extCmd, restArgs := args[0], args[1:]
+		joinedPath, found := searchPaths(extCmd)
+
+		if !matched && found {
+			command := exec.Command(joinedPath, restArgs...)
+			command.Stderr = os.Stderr
+			command.Stdout = os.Stdout
+			err := command.Run()
+			matched = err == nil
 		}
 
 		if !matched {
