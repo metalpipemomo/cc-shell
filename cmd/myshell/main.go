@@ -29,7 +29,7 @@ func main() {
 		"exit": regexp.MustCompile("exit ([0-9])+"),
 		"echo": regexp.MustCompile("echo (.+)"),
 		"type": regexp.MustCompile("type (.+)"),
-		"pwd":  regexp.MustCompile("pwd"),
+		"pwd":  regexp.MustCompile("^pwd"),
 	}
 
 	for {
