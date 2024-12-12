@@ -13,6 +13,7 @@ func main() {
 
 	cmds := map[string]*regexp.Regexp{
 		"exit": regexp.MustCompile("exit ([0-9])+"),
+		"echo": regexp.MustCompile("echo (.+)"),
 	}
 
 	for {
@@ -42,6 +43,12 @@ func main() {
 						fmt.Fprintln(os.Stderr, "Error occured during exit: ", err)
 					} else {
 						os.Exit(exitCode)
+					}
+				case "echo":
+					if len(match) != 2 {
+						fmt.Fprintln(os.Stderr, "Error occured during echo...")
+					} else {
+						fmt.Fprintln(os.Stdout, match[1])
 					}
 				}
 			}
