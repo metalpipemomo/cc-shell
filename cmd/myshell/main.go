@@ -29,6 +29,7 @@ func main() {
 		"exit": regexp.MustCompile("exit ([0-9])+"),
 		"echo": regexp.MustCompile("echo (.+)"),
 		"type": regexp.MustCompile("type (.+)"),
+		"pwd":  regexp.MustCompile("pwd"),
 	}
 
 	for {
@@ -81,6 +82,12 @@ func main() {
 							fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", match[1])
 						}
 					}
+				case "pwd":
+					exPath, err := os.Executable()
+					if err != nil {
+						fmt.Fprintln(os.Stderr, "Error: Unable to get working directory")
+					}
+					fmt.Fprintln(os.Stdout, exPath)
 				}
 			}
 		}
