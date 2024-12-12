@@ -14,6 +14,7 @@ func main() {
 	cmds := map[string]*regexp.Regexp{
 		"exit": regexp.MustCompile("exit ([0-9])+"),
 		"echo": regexp.MustCompile("echo (.+)"),
+		"type": regexp.MustCompile("type (.+)"),
 	}
 
 	for {
@@ -46,16 +47,27 @@ func main() {
 					}
 				case "echo":
 					if len(match) != 2 {
-						fmt.Fprintln(os.Stderr, "Error occured during echo...")
+						fmt.Fprintln(os.Stderr, "Error: Invalid argument length")
 					} else {
 						fmt.Fprintln(os.Stdout, match[1])
+					}
+				case "type":
+					if len(match) != 2 {
+						fmt.Fprintln(os.Stderr, "Error: Invalid argument length")
+					} else {
+						_, ok := cmds[match[1]]
+						if !ok {
+							fmt.Fprintf(os.Stderr, "%s: not found\n", match[1])
+						} else {
+							fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", match[1])
+						}
 					}
 				}
 			}
 		}
 
 		if !matched {
-			fmt.Fprintf(os.Stdout, "%s: command not found\n", cmd)
+			fmt.Fprintf(os.Stderr, "%s: command not found\n", cmd)
 		}
 	}
 }
