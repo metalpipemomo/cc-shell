@@ -12,7 +12,7 @@ import (
 func main() {
 
 	cmds := map[string]*regexp.Regexp{
-		"exit": regexp.MustCompile("exit [0-9]+"),
+		"exit": regexp.MustCompile("exit ([0-9])+"),
 	}
 
 	for {
