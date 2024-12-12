@@ -87,7 +87,7 @@ func main() {
 					if err != nil {
 						fmt.Fprintln(os.Stderr, "Error: Unable to get working directory")
 					}
-					fmt.Fprintln(os.Stdout, exPath)
+					fmt.Fprintln(os.Stdout, filepath.Dir(exPath))
 				}
 			}
 		}
